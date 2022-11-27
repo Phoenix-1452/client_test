@@ -1,5 +1,5 @@
 
-from piece import Pawn
+from piece import Pawn, Queen
 
 
 
@@ -8,7 +8,7 @@ class Board:
         self.rows = rows
         self.cols = cols
 
-        self.board = [[0 for i in range(8)] for j in range(rows)]
+        self.board = [[0 for i in range(8)] for j in range(8)]
 
 
         self.board[0][1] = Pawn(0, 1, 'b')
@@ -80,10 +80,34 @@ class Board:
         self.board[end[1]][end[0]] = self.board[start[1]][start[0]]
         try:
             if self.board[start[1]][start[0]].color == 'w':
+                c = abs(start[0] - end[0])
+                a = abs(start[0] + end[0]) // 2
+                b = abs(start[1] + end[1]) // 2
                 self.board[end[1]][end[0]] = Pawn(end[1], end[0], 'w')
-            if self.board[start[1]][start[0]].color == 'b':
+                if c == 2 and self.board[b][a].color == 'b':
+                    self.board[b][a] = 0
+
+            if self.board[start[1]][start[0]].color == 'b' and self.board[start[1]][start[0]].__class__ == Pawn:
+
+                c = abs(start[0] - end[0])
+                a = abs(start[0] + end[0])//2
+                b = abs(start[1] + end[1])//2
+
                 self.board[end[1]][end[0]] = Pawn(end[1], end[0], 'b')
+                if c == 2 and self.board[b][a].color == 'w':
+                    self.board[b][a] = 0
+                if end[1] == 7:
+                    self.board[end[1]][end[0]] = Queen(end[1], end[0], 'b')
+            if self.board[start[1]][start[0]].color == 'b' and self.board[start[1]][start[0]].__class__ == Queen:
+                self.board[end[1]][end[0]] = Queen(end[1], end[0], 'b')
+
+
+
+
             self.board[start[1]][start[0]] = 0
+
+
+
         except:
             pass
 

@@ -12,11 +12,8 @@ from time import sleep
 board = pygame.transform.scale(pygame.image.load(os.path.join("img", "board_alt.png")), (750, 750))
 rect = (113, 113, 525, 525)
 
-
-
 start = 0
 end = 0
-
 
 
 def redraw_win():
@@ -39,12 +36,13 @@ def click(pos):
             j = int(dy / (rect[3] / 8))
             return i, j
 
+
 # server's IP address
 # if the server is not on this machine,
 # put the private (network) IP address (e.g 192.168.1.2)
 SERVER_HOST = "127.0.0.1"
-SERVER_PORT = 5002 # server's port
-separator_token = "<SEP>" # we will use this to separate the client name & message
+SERVER_PORT = 5002  # server's port
+separator_token = "<SEP>"  # we will use this to separate the client name & message
 
 # initialize TCP socket
 s = socket.socket()
@@ -58,6 +56,7 @@ height = 750
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Shashki")
 
+
 def listen_for_messages():
     while True:
         msg = s.recv(1024).decode()
@@ -67,7 +66,6 @@ def listen_for_messages():
         end1 = int(j1), int(j2)
         color = bo.get_color(int(i1), int(i2))
         bo.move(start1, end1)
-
 
 
 # make a thread that listens for messages to this client & print them
@@ -101,7 +99,7 @@ while True:
                 i, j = click(pos)
                 start = i, j
                 flag = bo.select(i, j)
-
+                print(click(pos))
             except:
                 pass
         elif event.type == pygame.MOUSEBUTTONDOWN and flag:
@@ -110,6 +108,7 @@ while True:
                 i, j = click(pos)
                 end = i, j
                 moveCheck = bo.check(start, end)
+                print(click(pos))
                 if moveCheck:
                     bo.move(start, end)
                     data = str(start[0]) + str(start[1]) + str(end[0]) + str(end[1])
@@ -123,8 +122,8 @@ while True:
                     flag = False
 
             except:
-                pass
 
+                pass
 
 # close the socket
 s.close()
