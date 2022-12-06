@@ -10,7 +10,7 @@ class Board:
     def __init__(self, rows, cols):
         self.rows = rows
         self.cols = cols
-
+        self.king = True
         self.board = [[0 for i in range(8)] for j in range(8)]
 
         self.board[0][0] = Rook(0, 0, "b")
@@ -69,6 +69,12 @@ class Board:
     def get_color(self, row, col):
         return self.board[col][row].color
 
+    def check_king(self):
+        if self.king:
+            return True
+        else:
+            return False
+
     def check(self, start, end):
         moves = self.board[start[1]][start[0]].valid_moves(self.board)
         if end in moves:
@@ -79,34 +85,17 @@ class Board:
 
     def move(self, start, end, colorr):
         try:
-            if self.board[start[1]][start[0]].__class__ != Pawn:
-                self.board[start[1]][start[0]].change_pos((end[1], end[0]))
-                self.board[end[1]][end[0]] = self.board[start[1]][start[0]]
-                self.board[end[1]][end[0]].selected = False
 
-            if self.board[start[1]][start[0]].color == 'w' and self.board[start[1]][start[0]].__class__ == Pawn:
+            if self.board[end[1]][end[0]].__class__ == King:
+                self.king = False
+            self.board[start[1]][start[0]].change_pos((end[1], end[0]))
+            self.board[end[1]][end[0]] = self.board[start[1]][start[0]]
+            self.board[end[1]][end[0]].selected = False
+            if self.board[start[1]][start[0]].__class__ == Pawn:
                 self.board[start[1]][start[0]].first = False
-                self.board[end[1]][end[0]] = Pawn(end[1], end[0], 'w')
-
-                if not self.board[start[1]][start[0]].first:
-                    self.board[end[1]][end[0]].first = False
-
-                if end[1] == 0:
-                    self.board[end[1]][end[0]] = Queen(end[1], end[0], 'w')
-
-            if self.board[start[1]][start[0]].color == 'b' and self.board[start[1]][start[0]].__class__ == Pawn:
-                self.board[start[1]][start[0]].first = False
-
-                self.board[end[1]][end[0]] = Pawn(end[1], end[0], 'b')
-
-                if not self.board[start[1]][start[0]].first:
-                    self.board[end[1]][end[0]].first = False
-
-                if end[1] == 7:
-                    self.board[end[1]][end[0]] = Queen(end[1], end[0], 'b')
-                self.board[start[1]][start[0]].first = False
+                if end[1] == 7 or end[1] == 0:
+                    self.board[end[1]][end[0]] = Queen(end[1], end[0], self.board[end[1]][end[0]].color)
 
             self.board[start[1]][start[0]] = 0
         except:
             pass
-

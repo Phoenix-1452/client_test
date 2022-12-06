@@ -40,8 +40,12 @@ class Piece:
         self.color = color
         self.selected = False
         self.move_list = []
-        self.king = False
+        self.king = True
         self.pawn = False
+
+    def isKing(self):
+        return self.king
+
 
     def isSelected(self):
         return self.selected

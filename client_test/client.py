@@ -12,12 +12,11 @@ end = 0
 startX = rect[0]
 startY = rect[1]
 
+
 def redraw_win():
     global win, bo
     win.blit(board, (0, 0))
-
     bo.draw(win, bo.board)
-
     pygame.display.update()
 
 
@@ -44,10 +43,20 @@ print(f"[*] Connecting to {SERVER_HOST}:{SERVER_PORT}...")
 # connect to the server
 s.connect((SERVER_HOST, SERVER_PORT))
 print("[+] Connected.")
-
+data = ' '
+bo = Board(8, 8)
+clock = pygame.time.Clock()
+run = True
+flag = False
+global color, turn, d
+turn = False
+dig = 0
+start1, end1 = 0, 0
 
 def listen_for_messages():
-    global color, turn, d
+    global color, turn, d, bo
+    game = True
+
     while True:
         try:
             msg = s.recv(1024).decode()
@@ -60,7 +69,7 @@ def listen_for_messages():
                 color = 'w'
                 turn = True
             else:
-                if len(msg) == 5:
+                if len(msg) == 5 and game:
                     d = True
                     i1, i2 = msg[0], msg[1]
                     st = int(i1), int(i2)
@@ -77,6 +86,8 @@ def listen_for_messages():
                     while d:
                         pygame.draw.circle(win, (0, 0, 255), (x, y), 40, 5)
                         pygame.draw.circle(win, (0, 0, 255), (dx, dy), 40, 5)
+                    game = bo.check_king()
+
 
 
         except Exception as e:
@@ -95,15 +106,7 @@ t = Thread(target=listen_for_messages)
 t.daemon = True
 # start the thread
 t.start()
-data = ' '
-bo = Board(8, 8)
-clock = pygame.time.Clock()
-run = True
-flag = False
-global color, turn, d
-turn = False
-dig = 0
-start1, end1 = 0, 0
+
 
 while run:
     clock.tick(60)

@@ -5,7 +5,6 @@ from board import Board
 # server's IP address
 SERVER_HOST = "localhost"
 SERVER_PORT = 5002 # port we want to use
-separator_token = "<SEP>" # we will use this to separate the client name & message
 # initialize list/set of all connected client's sockets
 client_sockets = []
 # create a TCP socket
@@ -25,7 +24,7 @@ def listen_for_client(cs):
     This function keep listening for a message from `cs` socket
     Whenever a message is received, broadcast it to all other connected clients
     """
-    global msg
+    global msg, id
     while True:
         try:
 
@@ -44,18 +43,27 @@ def listen_for_client(cs):
         except Exception as e:
             # client no longer connected
             # remove it from the set
-            print(f"[!] Error: {e}")
-            for client_socket in client_sockets:
-                client_sockets.remove(client_socket)
+            print(f"[!] Error zxc: {e}")
+            try:
+                if id % 2 == 0:
+                    client_sockets.pop(id)
+                    client_sockets.pop(id-1)
+                else:
+                    client_sockets.pop(id)
+                    client_sockets.pop(id+1)
+            except:
+                pass
             break
 
 
 while True:
+    global l
     # we keep listening for new connections all the time
     client_socket, client_address = s.accept()
     print(f"[+] {client_address} connected.")
     # add the new connected client to connected sockets
     client_sockets.append(client_socket)
+    print(len(client_sockets))
     try:
         if len(client_sockets) % 2 == 0 and len(client_sockets) > 0:
             l = len(client_sockets)
