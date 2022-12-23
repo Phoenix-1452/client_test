@@ -58,22 +58,22 @@ class Piece:
             drawThis = W[self.img]
         else:
             drawThis = B[self.img]
-        x = 5 + round(self.startX + (self.col * self.rect[2] / 8))
-        y = 5 + round(self.startY + (self.row * self.rect[3] / 8))
+
+        dx = 5 + round(self.startX + (self.col * self.rect[2] / 8))
+        dy = 5 + round(self.startY + (self.row * self.rect[3] / 8))
+        win.blit(drawThis, (dx, dy))
+
 
         if self.selected:
-            pygame.draw.rect(win, (255, 0, 0), (x, y, 58, 58), 4)
+            pygame.draw.rect(win, (255, 0, 0), (dx, dy, 58, 58), 4)
 
-        win.blit(drawThis, (x, y))
-        if self.selected:
             moves = self.valid_moves(board)
-            # print(moves)
             for move in moves:
 
                 try:
                     x = 33 + round(self.startX + (move[0] * self.rect[2] / 8))
                     y = 33 + round(self.startY + (move[1] * self.rect[3] / 8))
-                    pygame.draw.circle(win, (255, 0, 0), (x, y), 10)
+                    pygame.draw.circle(win, (255, 0, 0), (x, y), 34, 4)
 
                 except:
                     pass

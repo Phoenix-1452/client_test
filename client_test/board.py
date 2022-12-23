@@ -55,6 +55,10 @@ class Board:
                 if self.board[i][j] != 0:
                     self.board[i][j].draw(win, board)
 
+
+    def zxc(self, col, row):
+        self.board[col][row].selected = False
+
     def select(self, col, row, colorr):
         for i in range(self.rows):
             for j in range(self.cols):
